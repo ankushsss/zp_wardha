@@ -1,6 +1,9 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
+
 
 const Login = () => {
+  const naviagte = useNavigate()
   return (
     <div id="app">
     <div className="max-w-md m-auto mt-6">
@@ -44,6 +47,7 @@ const Login = () => {
         <div className="px-4 mb-6">
           <button
             className="border border-blue-500 bg-blue-600 rounded w-full px-4 py-3 text-white font-semibold"
+          onClick={()=> naviagte("/dashboard")}
           >
             Sign in
           </button>

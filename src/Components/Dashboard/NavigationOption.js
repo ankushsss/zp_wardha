@@ -1,6 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const NavigationOption = () => {
+
+  const naviagte = useNavigate()
+
   return (
     <div>
     <nav className="mt-10">
@@ -53,9 +57,9 @@ const NavigationOption = () => {
                 <span className="mx-3">UI Elements</span>
               </a>
 
-              <a
+              <div
                 className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-                href="/tables"
+               onClick={()=>{naviagte("/dashboard/table")}}
               >
                 <svg
                   className="h-6 w-6"
@@ -72,7 +76,7 @@ const NavigationOption = () => {
                 </svg>
 
                 <span className="mx-3">Tables</span>
-              </a>
+              </div>
 
               <a
                 className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
