@@ -34,7 +34,11 @@ const NavigationOption = () => {
           <span className="mx-3">Dashboard</span>
         </div>
 
-        <a
+        <div
+
+          onClick={() => {
+            naviagte("/dashboard/Ui");
+          }}
           className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
           href="/ui-elements"
         >
@@ -53,7 +57,7 @@ const NavigationOption = () => {
           </svg>
 
           <span className="mx-3">UI Elements</span>
-        </a>
+        </div>
 
         <div
           className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
