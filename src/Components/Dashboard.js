@@ -10,7 +10,7 @@ export default function Dashboard() {
   return (
     <article className="w-full h-screen overflow-hidden ">
       <div>
-        <div className="flex h-screen " style={{background:"#F4E3E9"}}>
+        <div className="flex h-screen " style={{ background: "#F4E3E9" }}>
           {/*  div dgn onCLick, biar bisa keluar dari toggle sidebar */}
           {/* @click="sidebarOpen = false" */}
           <div
@@ -28,7 +28,6 @@ export default function Dashboard() {
                 ? "translate-x-0 ease-out"
                 : "-translate-x-full ease-in"
             }`}
-           
           >
             <div className="flex flex-row items-center justify-center mt-8">
               <div className="flex items-center">
@@ -53,8 +52,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-             
-              <NavigationOption/>
+            <NavigationOption />
           </div>
 
           <div className="flex-1 flex flex-col overflow-hidden">
@@ -156,7 +154,7 @@ export default function Dashboard() {
 
             {/* main content */}
             <main className="flex-1 overflow-x-hidden overflow-y-auto ">
-              <Outlet/>
+              <Outlet />
             </main>
           </div>
         </div>
