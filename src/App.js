@@ -7,6 +7,7 @@ import Table from "./Components/Table";
 // import Form from "./Form";
 import Ragistration from "./Components/Ragistration";
 import Detail from "./Components/Detail";
+import Ui from "./Components/Ui"
 
 function App() {
   return (
@@ -16,7 +17,10 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />}>
         <Route path="/dashboard/table" element={<Table />} />
         <Route path="/dashboard/Form" element={<Detail />} />
+        <Route path="/dashboard/Ui" element={<Ui />} />
       </Route>
+     
+      
     </Routes>
   );
 }
