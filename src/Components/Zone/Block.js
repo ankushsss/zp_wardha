@@ -9,21 +9,24 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { departmantList,deleteDepartmant } from "../Services/Apis/Api";
+import { zoneById,deleteDepartmant } from "../../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Model from "./Departmant/Model";
-import AlertMssg from "./Alert/Alert";
+// import Model from "./Departmant/Model";
+import AlertMssg from "../Alert/Alert";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from "react-router-dom";
+import DistrictModel from "./DistrictModel";
+import { useParams } from "react-router-dom";
+import BlockModel from "./BlockModel";
 
-
-export default function Table() {
+export default function Block() {
   const Handle = () => {
     "Hello";
   };
+  const {zoneId} = useParams()
   const dispatch = useDispatch()
-  const [departmants,setDepartmants] = React.useState([])
+  const [District,setDistrict] = React.useState([])
   const [openDilog,setOpenDialog] = React.useState({
     open:false,
     type:"add"
@@ -33,27 +36,29 @@ export default function Table() {
     mssg:"add",
     type:"success"
   })
-  const [singleDepartmantInformation,setSingleDepartmantInformation] = React.useState({})
+  const [singleDistrict,setSingleDistrict] = React.useState({})
   const navigate = useNavigate()
  
 
-  const getDepartmentList = ()=>{
-    dispatch(departmantList()).then((res)=>{
-      setDepartmants(res.payload.data)
+  const getDistrict = ()=>{
+    dispatch(zoneById(zoneId)).then((res)=>{
+        console.log(res.payload.result)
+      setDistrict(res.payload.result.blocks)
     })
   }
   React.useEffect(() => {
-    getDepartmentList()
+    getDistrict()
   }, [])
 const editDepartmant = (singleDepartmant)=>{
+  setSingleDistrict(singleDepartmant)
   setOpenDialog({...openDilog,open:true,type:"edit"})
-  setSingleDepartmantInformation(singleDepartmant)
+  (singleDepartmant)
 }
  function deleteSingleDepartmant (singleDepartmant){
   const response =  dispatch(deleteDepartmant(singleDepartmant._id)).then((res)=>{
     console.log(res)
-    setOpenAlert({open:true,mssg:"departmant delete successfully",type:"success"})
-    getDepartmentList()
+    setOpenAlert({open:true,mssg:"departmant delesetSingleDistrictte successfully",type:"success"})
+    getDistrict()
   }). catch((err)=>{
     setOpenAlert({open:true,mssg:"error",type:"error"})
   })
@@ -62,27 +67,19 @@ const editDepartmant = (singleDepartmant)=>{
     return(
       <div style={{display:"flex"}}>
            <div style={{color:"darkblue",cursor:"pointer",marginLeft:"5px"}} onClick={()=>editDepartmant(row.row)}><EditIcon/></div>
-          <div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>
-          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/department/${row.row._id}/${row.row.deptName}`)}><VisibilityIcon/></div>
+         {/*<div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>*/}
+          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/villege/${zoneId}/${row.row.blockUniqueId}`)}><VisibilityIcon/></div>
           
       </div>
     )
   }
   const columns = [
-    // { field: "_id", headerName: "ID", width: 250 },
+    { field: "blockUniqueId", headerName: "Block ID", width: 250 },
     {
-      field: "deptName",
-      headerName: "Departmant Name",
+      field: "blockName",
+      headerName: "Block Name",
       width: 150,
       editable: false,
-    },
-    {
-      field: "Scheme",
-      headerName: "Scheme",
-      width: 150,
-      renderCell:(row)=>{
-          return(<Chip label={row.row.schemeDetails.length}/>)
-      }
     },
     {
       field: "IsActive",
@@ -118,21 +115,21 @@ const editDepartmant = (singleDepartmant)=>{
   >
     <Toolbar>
       <Typography variant="h6" color="inherit" noWrap>
-        Departmant
+        Block
       </Typography>
     </Toolbar>
   </AppBar>
     <div style={{display:"flex", height:"500px",marginTop:"20px",background:"white",justifyContent:"center",width:"100%",flexDirection:"column",alignItems:"center"}}>
       
-    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})}>Add Departmant</Button></div></div>
+    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})}>Add Block</Button></div></div>
     <div style={{minWidth:"300px",maxWidth:"100%",width:"80%",background:"white"}}>
           
           <div style={{ height: 400, width: "100%", background: "white" }}>
             <DataGrid
-              rows={departmants}
+              rows={District}
               columns={columns}
               pageSize={5}
-              getRowId={(row) =>  row._id}
+              getRowId={(row) =>  row.blockUniqueId}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
               checkboxSelection
@@ -141,8 +138,8 @@ const editDepartmant = (singleDepartmant)=>{
           </div>
       </div>
     </div>
-        <Model action={openDilog} getDepartmentList={getDepartmentList} setOpenAlert={setOpenAlert} singleDepartmantInformation={singleDepartmantInformation} dispatch={dispatch} setAction={setOpenDialog}/>
-    
+        {/*<Model action={openDilog} getDistrict={getDistrict} setOpenAlert={setOpenAlert} singleDistrict={singleDistrict} dispatch={dispatch} setAction={setOpenDialog}/>*/}
+        <BlockModel  action={openDilog} getDistrict={getDistrict} setOpenAlert={setOpenAlert} singleDistrict={singleDistrict} dispatch={dispatch} setAction={setOpenDialog}/>
         <AlertMssg  action={openAlert} setAction={setOpenAlert}/>
     </div>
   );

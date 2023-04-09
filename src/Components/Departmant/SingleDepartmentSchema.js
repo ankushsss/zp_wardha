@@ -9,16 +9,20 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { departmantList,deleteDepartmant } from "../Services/Apis/Api";
+import { schemeList,deleteDepartmant } from "../../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Model from "./Departmant/Model";
-import AlertMssg from "./Alert/Alert";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import AlertMssg from "../Alert/Alert";
+import { useParams } from "react-router-dom";
+// import SchemeModel from "./schemeModel";
+import SchemeModel from "./SchemeModel";
 import { useNavigate } from "react-router-dom";
 
 
-export default function Table() {
+
+export default function SingleDepartmentSchema() {
   const Handle = () => {
     "Hello";
   };
@@ -28,18 +32,20 @@ export default function Table() {
     open:false,
     type:"add"
   })
+
   const [openAlert,setOpenAlert] = React.useState({
     open:false,
     mssg:"add",
     type:"success"
   })
   const [singleDepartmantInformation,setSingleDepartmantInformation] = React.useState({})
-  const navigate = useNavigate()
- 
+  const {departmentId} = useParams()
+ const navigate = useNavigate()
 
   const getDepartmentList = ()=>{
-    dispatch(departmantList()).then((res)=>{
+    dispatch(schemeList(departmentId)).then((res)=>{
       setDepartmants(res.payload.data)
+      console.log(res.payload)
     })
   }
   React.useEffect(() => {
@@ -63,26 +69,18 @@ const editDepartmant = (singleDepartmant)=>{
       <div style={{display:"flex"}}>
            <div style={{color:"darkblue",cursor:"pointer",marginLeft:"5px"}} onClick={()=>editDepartmant(row.row)}><EditIcon/></div>
           <div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>
-          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/department/${row.row._id}/${row.row.deptName}`)}><VisibilityIcon/></div>
-          
+          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/question/${departmentId}/${row.row.schemeId}`)}><VisibilityIcon/></div>
+
       </div>
     )
   }
   const columns = [
-    // { field: "_id", headerName: "ID", width: 250 },
+    { field: "schemeId", headerName: "ID", width: 250 },
     {
-      field: "deptName",
-      headerName: "Departmant Name",
+      field: "schemeName",
+      headerName: "Scheme Name",
       width: 150,
       editable: false,
-    },
-    {
-      field: "Scheme",
-      headerName: "Scheme",
-      width: 150,
-      renderCell:(row)=>{
-          return(<Chip label={row.row.schemeDetails.length}/>)
-      }
     },
     {
       field: "IsActive",
@@ -96,7 +94,7 @@ const editDepartmant = (singleDepartmant)=>{
     {
       field: "Action",
       headerName: "Action",
-      width: 200,
+      width: 150,
       renderCell:(row)=>{
           return(<Action row={row}/>)
       },
@@ -118,13 +116,13 @@ const editDepartmant = (singleDepartmant)=>{
   >
     <Toolbar>
       <Typography variant="h6" color="inherit" noWrap>
-        Departmant
+        Schema
       </Typography>
     </Toolbar>
   </AppBar>
     <div style={{display:"flex", height:"500px",marginTop:"20px",background:"white",justifyContent:"center",width:"100%",flexDirection:"column",alignItems:"center"}}>
       
-    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})}>Add Departmant</Button></div></div>
+    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})} style={{background: "#6750A4"}}>Add Scheme</Button></div></div>
     <div style={{minWidth:"300px",maxWidth:"100%",width:"80%",background:"white"}}>
           
           <div style={{ height: 400, width: "100%", background: "white" }}>
@@ -141,7 +139,7 @@ const editDepartmant = (singleDepartmant)=>{
           </div>
       </div>
     </div>
-        <Model action={openDilog} getDepartmentList={getDepartmentList} setOpenAlert={setOpenAlert} singleDepartmantInformation={singleDepartmantInformation} dispatch={dispatch} setAction={setOpenDialog}/>
+        <SchemeModel action={openDilog} getDepartmentList={getDepartmentList} setOpenAlert={setOpenAlert} singleDepartmantInformation={singleDepartmantInformation} dispatch={dispatch} setAction={setOpenDialog}/>
     
         <AlertMssg  action={openAlert} setAction={setOpenAlert}/>
     </div>

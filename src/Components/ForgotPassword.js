@@ -2,57 +2,40 @@ import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import OtpInput from "react-otp-input";
 import axios from "axios"
-import { loginUser,verifyOtp } from "../Services/Apis/Api";
+import { loginUser,verifyOtp,sendOtp } from "../Services/Apis/Api";
 import { useDispatch } from "react-redux";
 import { useCookies } from 'react-cookie';
-import AlertMssg from "./Alert/Alert";
 
-const Login = () => {
+const ForgotPassword = () => {
   const naviagte = useNavigate();
   const [code, setCode] = useState("");
   const handleChange = (code) => setCode(code);
   const [isVerify,setIsVerify] = useState(false);
   const dispatch = useDispatch()
-  const [openAlert,setOpenAlert] = React.useState({
-    open:false,
-    mssg:"add",
-    type:"success"
-  })
-  const [user, setUser] = useState({
-    "email":"",
-    "password":""
-})
+  const [contactNumber, setContactNumber] = useState("")
+  const [password, setPassword] = useState("")
+
 const [token, setToken] = useState("")
 const [cookies, setCookie] = useCookies(['token']);
   
   function signIn(){
-   
-    dispatch(loginUser(user)).then((res)=>{
-      console.log(res.payload)
+   if(!isVerify)
+   {
+    dispatch(sendOtp({contactNumber:contactNumber})).then((res)=>{
       
-      if(res.payload.message == "Logged in successfully")
-      {
-        setToken(res.data)
-        setCookie("token",res.payload.token)
-        naviagte("/dashboard")
-        window.location.reload()
-      }
-      else{
-        setOpenAlert({
-          open:true,
-          mssg:res.payload.response.data.message,
-          type:"warning"
-        })
-        
-      }
-      
-      
-     
+      setIsVerify(true)
 
     }).catch((err)=>{
       
     })
-
+  }
+  else{
+    dispatch(verifyOtp({otp:code,confirmPassword:password})).then((res)=>{
+      console.log(res)
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
 
    
   }
@@ -63,24 +46,26 @@ const [cookies, setCookie] = useCookies(['token']);
           <h3 className="text-xl text-center mt-8 mb-8">Welcome back!</h3>
           <div className="px-4 mb-4">
             <input
-              type="email"
-              placeholder="Email Address"
+              type="text"
+              placeholder="Mobile Number"
               className="border border-gray rounded w-full p-3"
-              onChange={(e)=>setUser({...user,"email":e.target.value})}
+              onChange={(e)=>setContactNumber(e.target.value)}
 
             />
           </div>
-          <div className="px-4 mb-4">
-            <input
-              type="password"
-              placeholder="Password"
-              className="border border-gray rounded w-full p-3"
-              onChange={(e)=>setUser({...user,"password":e.target.value})}
-            />
-          </div>
+          {isVerify?  <div className="px-4 mb-4" style={{width:"100%"}}>
+          <input
+            type="password"
+            placeholder="Password"
+            className="border border-gray rounded w-full p-3"
+            onChange={(e)=>setPassword(e.target.value)}
+/>
+        </div>:""}
           <div className="px-4 mb-4 flex">
             <div className="w-1/2">
-           {isVerify? <OtpInput
+           {isVerify? 
+            <>
+            <OtpInput
             value={code}
             onChange={handleChange}
             numInputs={6}
@@ -102,20 +87,19 @@ const [cookies, setCookie] = useCookies(['token']);
               border: "1px solid #CFD3DB",
               outline: "none"
             }}
-          />:""}
+          />
+         
+        </>
+          :""}
             </div>
-            <div className="w-1/2 text-right">
-              <a href="#" className="font-semibold no-underline text-black">
-                Forgot your password?
-              </a>
-            </div>
+          
           </div>
           <div className="px-4 mb-6">
             <button
               className="border border-blue-500 bg-blue-600 rounded w-full px-4 py-3 text-white font-semibold"
               onClick={signIn}
             >
-              Sign in
+              {isVerify?"verify":" Send Otp"}
             </button>
           </div>
           <div className="bg-gray-100 text-center text-gray-700 py-5">
@@ -127,8 +111,6 @@ const [cookies, setCookie] = useCookies(['token']);
               Signup
             </button>
           </div>
-          
-          <AlertMssg  action={openAlert} setAction={setOpenAlert}/>
         
         </div>
       </div>
@@ -136,4 +118,4 @@ const [cookies, setCookie] = useCookies(['token']);
   );
 };
 
-export default Login;
+export default ForgotPassword;

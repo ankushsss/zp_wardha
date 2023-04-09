@@ -9,7 +9,10 @@ const NavigationOption = () => {
       <nav className="mt-10">
         <div
           className="flex items-center mt-4 py-2 px-6  bg-opacity-25 text-gray-100"
-          style={{ background: "#E8DEF8", color: " #1D192B" }}
+          style={{ background: "transparent", color: " #1D192B" }}
+          onClick={() => {
+            naviagte("/dashboard");
+          }}
         >
           <svg
             className="h-6 w-6"
@@ -35,31 +38,6 @@ const NavigationOption = () => {
         </div>
 
         <div
-
-          onClick={() => {
-            naviagte("/dashboard/Ui");
-          }}
-          className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
-          href="/ui-elements"
-        >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"
-            ></path>
-          </svg>
-
-          <span className="mx-3">UI Elements</span>
-        </div>
-
-        <div
           className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
           onClick={() => {
             naviagte("/dashboard/table");
@@ -79,10 +57,10 @@ const NavigationOption = () => {
             ></path>
           </svg>
 
-          <span className="mx-3">Tables</span>
+          <span className="mx-3">Departmant</span>
         </div>
 
-        <div
+       {/* <div
           className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
           onClick={() => {
             naviagte("/dashboard/Form");
@@ -103,16 +81,26 @@ const NavigationOption = () => {
           </svg>
 
           <span className="mx-3">Forms</span>
-        </div>
-
-
-
+        </div>*/}
+        
 
 
         <div
           className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
           onClick={() => {
-            naviagte("/dashboard/Village");
+            naviagte("/dashboard/user");
+          }}
+        >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 group-hover:text-gray-50" viewBox="0 0 20 20"
+        fill="currentColor">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+      </svg>
+          <span className="mx-3">User</span>
+        </div>
+        <div
+          className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+          onClick={() => {
+            naviagte("/dashboard/district");
           }}
         >
           <svg
@@ -129,13 +117,32 @@ const NavigationOption = () => {
             ></path>
           </svg>
 
-          <span className="mx-3">Village</span>
+          <span className="mx-3">District(zone)</span>
         </div>
 
+      <div
+        onClick={() => {
+          naviagte("/dashboard/Survey");
+        }}
+        className="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100"
+        href="/ui-elements"
+      >
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z"
+          ></path>
+        </svg>
 
-
-
-
+        <span className="mx-3">Survey</span>
+      </div>
       </nav>
     </div>
   );

@@ -9,16 +9,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { departmantList,deleteDepartmant } from "../Services/Apis/Api";
+import { schemeList,deleteDepartmant } from "../../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Model from "./Departmant/Model";
-import AlertMssg from "./Alert/Alert";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useNavigate } from "react-router-dom";
+
+import AlertMssg from "../Alert/Alert";
+import { useParams } from "react-router-dom";
+// import SchemeModel from "./schemeModel";
+import SchemeModel from "./SchemeModel";
+import QuestionModel from "./QuestionModel";
 
 
-export default function Table() {
+export default function Question() {
   const Handle = () => {
     "Hello";
   };
@@ -28,18 +30,26 @@ export default function Table() {
     open:false,
     type:"add"
   })
+
   const [openAlert,setOpenAlert] = React.useState({
     open:false,
     mssg:"add",
     type:"success"
   })
   const [singleDepartmantInformation,setSingleDepartmantInformation] = React.useState({})
-  const navigate = useNavigate()
+  
+  const {departmentId,schemeId} = useParams()
  
 
   const getDepartmentList = ()=>{
-    dispatch(departmantList()).then((res)=>{
-      setDepartmants(res.payload.data)
+    dispatch(schemeList(departmentId)).then((res)=>{
+     let schemesData = res.payload.data.filter((questions)=>{
+       
+        return questions.schemeId == schemeId
+      })
+      console.log(schemesData,schemeId)
+      setDepartmants(schemesData[0].questionnaire)
+       
     })
   }
   React.useEffect(() => {
@@ -63,40 +73,32 @@ const editDepartmant = (singleDepartmant)=>{
       <div style={{display:"flex"}}>
            <div style={{color:"darkblue",cursor:"pointer",marginLeft:"5px"}} onClick={()=>editDepartmant(row.row)}><EditIcon/></div>
           <div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>
-          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/department/${row.row._id}/${row.row.deptName}`)}><VisibilityIcon/></div>
-          
+
       </div>
     )
   }
   const columns = [
-    // { field: "_id", headerName: "ID", width: 250 },
+    { field: "_id", headerName: "id", width: 250 },
     {
-      field: "deptName",
-      headerName: "Departmant Name",
-      width: 150,
+      field: "question",
+      headerName: "Question",
+      width: 400,
       editable: false,
     },
     {
-      field: "Scheme",
-      headerName: "Scheme",
+      field: "range",
+      headerName: "Range",
       width: 150,
       renderCell:(row)=>{
-          return(<Chip label={row.row.schemeDetails.length}/>)
-      }
-    },
-    {
-      field: "IsActive",
-      headerName: "Active",
-      width: 150,
-      renderCell:(row)=>{
-  return(<Switch value={row.IsActive}/>)
+        console.log(row.row)
+  return(<div>{`${row.row.range}`}</div>)
       },
       editable: false,
     },
     {
       field: "Action",
       headerName: "Action",
-      width: 200,
+      width: 150,
       renderCell:(row)=>{
           return(<Action row={row}/>)
       },
@@ -118,13 +120,13 @@ const editDepartmant = (singleDepartmant)=>{
   >
     <Toolbar>
       <Typography variant="h6" color="inherit" noWrap>
-        Departmant
+        Question
       </Typography>
     </Toolbar>
   </AppBar>
     <div style={{display:"flex", height:"500px",marginTop:"20px",background:"white",justifyContent:"center",width:"100%",flexDirection:"column",alignItems:"center"}}>
       
-    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})}>Add Departmant</Button></div></div>
+    <div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" onClick={()=>setOpenDialog({...openDilog,open:true,type:"add"})} style={{background: "#6750A4"}}>Add question</Button></div></div>
     <div style={{minWidth:"300px",maxWidth:"100%",width:"80%",background:"white"}}>
           
           <div style={{ height: 400, width: "100%", background: "white" }}>
@@ -141,7 +143,7 @@ const editDepartmant = (singleDepartmant)=>{
           </div>
       </div>
     </div>
-        <Model action={openDilog} getDepartmentList={getDepartmentList} setOpenAlert={setOpenAlert} singleDepartmantInformation={singleDepartmantInformation} dispatch={dispatch} setAction={setOpenDialog}/>
+        <QuestionModel action={openDilog} getDepartmentList={getDepartmentList} setOpenAlert={setOpenAlert} singleDepartmantInformation={singleDepartmantInformation} dispatch={dispatch} setAction={setOpenDialog}/>
     
         <AlertMssg  action={openAlert} setAction={setOpenAlert}/>
     </div>
