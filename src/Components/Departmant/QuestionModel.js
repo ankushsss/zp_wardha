@@ -9,6 +9,63 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { addDepartment,addAndUpdateQuestion,editDepartmant } from '../../Services/Apis/Api';
 import { useParams } from 'react-router-dom';
 import { Box, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { act } from '@testing-library/react';
+
+const Options = ({action,res,newOptions,editValueDataArray,setEditValueDataArray,editValueArray,setEditValueArray,singleDepartmantInformation,index,valueDataArray, valueArray,setValueArray,setValueDataArray})=>{
+    const [valueOfvalue, setValueOfvalue] = React.useState(res)
+    const [answerOfValue, setAnswerOfValue] = React.useState(singleDepartmantInformation.valueAgainstEveryRangeElement[index])
+   React.useEffect(()=>{
+    console.log(editValueArray)
+    console.log(editValueDataArray)
+   },[editValueArray,editValueDataArray])
+  
+  return(<Grid  style={{textAlign:"center",marginTop:"20px"}}>
+  {action.type == "edit"?<>
+  <TextField  placeholder='name' id={index} value={valueOfvalue} onChange={(e)=>
+    {
+    
+    setValueOfvalue(e.target.vlue)
+    editValueArray[index] = e.target.value
+    setEditValueArray([...editValueArray])
+  
+
+  }
+  } width="50%" />
+  <TextField  placeholder='value' id={index} value={answerOfValue} onChange={(e)=>
+    
+    {
+      setAnswerOfValue(e.target.vlue)
+      editValueDataArray[index] = e.target.value
+      setEditValueDataArray([...editValueDataArray])
+    
+  }} width="50%" style={{marginLeft:"20px"}}/></>:
+ 
+ 
+ 
+  <><TextField  placeholder='name' id={index}  width="50%" onChange={(e,index)=>{
+    let arr = [...valueArray]
+    arr[e.target.id] = e.target.value
+   
+      
+      setValueArray(arr)
+      console.log(valueArray,"valueArray")
+  }}/>
+  <TextField placeholder='value' id={index} width="50%"onChange={(e,index)=>{
+    let arr2 = [...valueDataArray]
+    arr2[e.target.id] = e.target.value
+   
+      
+    setValueDataArray(arr2)
+      console.log(valueDataArray,"valueDataArray")
+  }} style={{marginLeft:"20px"}}/>
+  
+  </>
+}
+
+
+
+</Grid>)
+}
 
 export default function QuestionModel({action,dispatch,getDepartmentList,setAction,singleDepartmantInformation,setOpenAlert}) {
   const [open, setOpen] = React.useState(false);
@@ -23,6 +80,24 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
     startRange:'',
     endRange:''
   })
+  let [valueArray, setValueArray] = React.useState([])
+  let [editValueArray, setEditValueArray] = React.useState([])
+
+  let [valueDataArray, setValueDataArray] = React.useState([])
+  let [editValueDataArray, setEditValueDataArray] = React.useState([])
+  
+
+  let [newOptions, setNewOptions] = React.useState({})
+
+
+  React.useEffect(()=>{
+    console.log(newOptions)
+
+  },[newOptions])
+
+  
+
+
  
   const handelChangeOfQuestionNumber = (e)=>{
        
@@ -40,11 +115,30 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
 
   const closeDialog = ()=>{
     setAction({...action,open:false})
-    setQuestionData("")
+    setQuestionData({question:""})
+    setNumberOfQuestionArray([])
   }
 
    React.useEffect(() => {
-    action.type=="sedit"?setQuestionData(singleDepartmantInformation.deptName):setQuestionData("")
+    console.log(action)
+    action.type != "add"?setQuestionData({question:singleDepartmantInformation.question})  :setQuestionData({question:""})
+    action.type != "add"?setNumberOfQuestion(singleDepartmantInformation.range.length):setNumberOfQuestion(0)
+    action.type != "add"?setNumberOfQuestionArray(singleDepartmantInformation.range):setNumberOfQuestionArray([])
+    action.type != "add"?setEditValueArray(singleDepartmantInformation.range):setEditValueArray([])
+    action.type != "add"?setEditValueDataArray(singleDepartmantInformation.valueAgainstEveryRangeElement):setValueDataArray([])
+
+
+
+    if(action.type != "add")
+    {
+      console.log(singleDepartmantInformation.range)
+      singleDepartmantInformation.range.map((val,index)=>{
+          // newOptions.push({key:val,value:singleDepartmantInformation.valueAgainstEveryRangeElement[index]})
+          Object.assign(newOptions, {[`data${index}`]: {key:val,value:singleDepartmantInformation.valueAgainstEveryRangeElement[index]}});
+          console.log(newOptions)
+          setNewOptions({...newOptions})
+    })
+  }
    }, [singleDepartmantInformation,action])
    async function addScheme(){
         try{
@@ -70,16 +164,19 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
             question:questionData.question,
             schemeId:schemeId,
             questionId:singleDepartmantInformation._id,
-            range:rangeArray
+            range:editValueArray,
+            valueAgainstEveryRangeElement:editValueDataArray,
+            noofButtons:5
           } :{
             question:questionData.question,
             schemeId:schemeId,
-           
-            range:rangeArray
+            range:valueArray,
+            valueAgainstEveryRangeElement:valueDataArray,
+            noofButtons:5
           }
         var data = {schemeId:singleDepartmantInformation.schemeId,questionId:id,schemeName:questionData}
-        const response =  action.type=="edit"?await dispatch(addAndUpdateQuestion({data:sendQuestionData,departmentId:departmentId})):await dispatch(addAndUpdateQuestion({data:sendQuestionData,departmentId:departmentId}))
-        console.log(response)
+        action.type=="edit"?await dispatch(addAndUpdateQuestion({data:sendQuestionData,departmentId:departmentId})):await dispatch(addAndUpdateQuestion({data:sendQuestionData,departmentId:departmentId}))
+        setNumberOfQuestionArray([])
         setOpenAlert({
             open:true,
             mssg:action.type=="edit"?"Question edit successfully":"Question add successfully",
@@ -101,7 +198,7 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
 
   return (
     <div>
-      <Dialog open={action.open} style={{width:"70%",height:"100%"}} onClose={()=>closeDialog()}>
+      <Dialog open={action.open} style={{height:"100%"}} onClose={()=>closeDialog()}>
         <DialogTitle>      
              {action.type == "add"? "Add Question":"Edit Question"}
         </DialogTitle>
@@ -149,22 +246,29 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
   </Box>*/}
   
       <FormControl style={{marginTop:"20px"}}fullWidth>
-      <InputLabel id="demo-simple-select-label">Number Of Button</InputLabel>
+      <InputLabel id="demo-simple-select-label">Range</InputLabel>
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={numberOfQuestion}
-        label="Number Of Button"
+        label="Range"
         onChange={(e)=>{
           setNumberOfQuestion(e.target.value)
+          console.log("numberOfQuestionArray",numberOfQuestionArray)
+          // numberOfQuestionArray = []
+          console.log(e.target.value,"numberOfQuestionArray")
+          let newOne = []
+
           for(let number =0; number<e.target.value;number++ )
           {
-            numberOfQuestionArray.push(number)
+            newOne.push(number)
           }
-          setNumberOfQuestionArray(numberOfQuestionArray)
+          setNumberOfQuestionArray(newOne)
+     
+          console.log("numberOfQuestionArray",numberOfQuestionArray)
         }}
       >
-         {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((value)=>{
+         {[1,2,3,4,5,6,7,8,9,10,11,12].map((value)=>{
           return(
               <MenuItem value={value}>{value}</MenuItem>
 
@@ -174,18 +278,17 @@ export default function QuestionModel({action,dispatch,getDepartmentList,setActi
       
 
     </FormControl>
-    {numberOfQuestionArray.map((res)=>{
-      return(<Grid  style={{textAlign:"center",marginTop:"20px"}}>
-      <TextField placeholder='name' width="50%"/>
-      <TextField placeholder='value' width="50%" style={{marginLeft:"20px"}}/>
-
-
-   </Grid>)
+    {numberOfQuestionArray.map((res,index)=>{
+      return(
+        <Options res={res} editValueDataArray={editValueDataArray} setEditValueDataArray={setEditValueDataArray} setEditValueArray={setEditValueArray} editValueArray={editValueArray} index={index} action={action} singleDepartmantInformation={singleDepartmantInformation} valueDataArray={valueDataArray}  valueArray={valueArray} setValueArray={setValueArray} setValueDataArray={setValueDataArray}/>
+        )
     })}
           
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>closeDialog()}>Cancel</Button>
+          <Button onClick={()=>{
+            closeDialog()
+             setNumberOfQuestionArray([])}}>Cancel</Button>
           <Button onClick={()=>addScheme()}>Add</Button>
         </DialogActions>
       </Dialog>

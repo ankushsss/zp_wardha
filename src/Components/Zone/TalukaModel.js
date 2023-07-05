@@ -72,7 +72,7 @@ export default function TalukaModel({action,dispatch,getDistrict,setAction,singl
     <div>
       <Dialog open={action.open} onClose={()=>closeDialog()}>
         <DialogTitle>      
-             {action.type == "add"? "Add Block":"Edit Block"}
+             {action.type == "add"? "Add taluka":"Edit taluka"}
         </DialogTitle>
         <DialogContent>
 

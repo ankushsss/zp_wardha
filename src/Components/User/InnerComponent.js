@@ -2,20 +2,20 @@ import { Box, CircularProgress, List, ListItemButton, ListItemIcon, TextField } 
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { getAllVilleges } from '../../Services/Apis/Api'
+import { useEffect } from 'react'
 
-const InnerComponent = ({singleDistrict,setSelectedVillagesList,selectedVillagesList,setSelectedVillage,selectedVillage}) => {
+const InnerComponent = ({singleDistrict,nmberOfAssignVill,setSelectedVillagesList,selectedVillagesList,setSelectedVillage,selectedVillage}) => {
    const dispatch = useDispatch()
    const [listOfData, setListOfData] = React.useState([])
    const [searchValue, setSearchValue] = React.useState("")
-  React.useEffect(() => {
-    dispatch(getAllVilleges()).then((listOfVilleges)=>{
-      setListOfData(listOfVilleges.payload.data)
-})
-  }, [])
 
-  const allfilteredDepartments = listOfData.filter((village) =>
+  const allfilteredDepartments = nmberOfAssignVill.filter((village) =>
   village.villageName.toLowerCase().includes(searchValue.toLowerCase())
 );
+
+useEffect(()=>{
+console.log(selectedVillagesList,"dum2")
+},[selectedVillagesList])
   const handleCheckboxChange = (event) => {
     const villageId = event.target.value;
     if (event.target.checked) {
@@ -34,18 +34,20 @@ const InnerComponent = ({singleDistrict,setSelectedVillagesList,selectedVillages
     if(e.target.checked)
     { 
       // setSelectedVillagesList([])
-      selectedVillage.map((single)=>{
+      console.log("hii",nmberOfAssignVill)
+      
+      nmberOfAssignVill.map((single)=>{
         arr.push(single.villageUniqueId)
       })
-      setSelectedVillagesList(arr)
+      setSelectedVillagesList([...arr])
    
-      console.log(selectedVillagesList,"d")
+      console.log(selectedVillagesList,"dum")
       
     }
     else
     {
       setSelectedVillagesList([])
-      console.log(selectedVillagesList,"d")
+      console.log(selectedVillagesList,"dum")
     }
   }
   return (
@@ -71,16 +73,13 @@ const InnerComponent = ({singleDistrict,setSelectedVillagesList,selectedVillages
         </List>
         <div>
         {
-          listOfData.length !=0?<div>
+          nmberOfAssignVill?<div>
           {
             allfilteredDepartments.map((listOfVillage)=>{
 
               return(
-                <div>
-                {singleDistrict.AssignVillage.villages.map((village)=>{
-                  if(listOfVillage.villageUniqueId == village)
-                  {
-                  return(
+            
+                  
                     <List component="div" disablePadding>
                           <ListItemButton sx={{ pl: 4 }}>
                             <ListItemIcon>
@@ -96,10 +95,9 @@ const InnerComponent = ({singleDistrict,setSelectedVillagesList,selectedVillages
                               </ListItemButton>
                             </List>
                   
-                  )}
+                  
                 
-                })}
-                </div>
+             
               )
             })
           }

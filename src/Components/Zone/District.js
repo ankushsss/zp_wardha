@@ -93,15 +93,6 @@ const editDepartmant = (singleDepartmant)=>{
       }
     },
     {
-      field: "IsActive",
-      headerName: "Active",
-      width: 150,
-      renderCell:(row)=>{
-  return(<Switch value={row.IsActive}/>)
-      },
-      editable: false,
-    },
-    {
       field: "Action",
       headerName: "Action",
       width: 200,
@@ -143,8 +134,7 @@ const editDepartmant = (singleDepartmant)=>{
               getRowId={(row) =>  row._id}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
+            
             />
           </div>
       </div>

@@ -9,7 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { departmantList,deleteDepartmant } from "../Services/Apis/Api";
+import { departmantList,deleteDepartmant,disableDepartmant } from "../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Model from "./Departmant/Model";
@@ -89,7 +89,13 @@ const editDepartmant = (singleDepartmant)=>{
       headerName: "Active",
       width: 150,
       renderCell:(row)=>{
-  return(<Switch value={row.IsActive}/>)
+  return(<Switch checked={row.row.isDisable}  onChange={(e)=>{
+        let disableData = {"isDisable":e.target.checked}
+        dispatch(disableDepartmant({id:row.row._id, data:disableData})).then((res)=>{
+          getDepartmentList()
+         })
+      
+  }}/>)
       },
       editable: false,
     },
@@ -135,8 +141,6 @@ const editDepartmant = (singleDepartmant)=>{
               getRowId={(row) =>  row._id}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
             />
           </div>
       </div>

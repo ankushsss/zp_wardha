@@ -9,10 +9,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { addVillage,editZone,addTaluka } from '../../Services/Apis/Api';
 import { useParams } from 'react-router-dom';
 
-export default function VillageModel({action,dispatch,taluka,getDistrict,setAction,singleDistrict,setOpenAlert}) {
+export default function VillageModel({blockData,action,dispatch,taluka,getDistrict,setAction,singleDistrict,setOpenAlert}) {
   const [open, setOpen] = React.useState(false);
   const [block, setBlock] = React.useState("")
-  const {zoneId,blockUniqueId,} = useParams()
+  const {zoneId,districtName,blockUniqueId,} = useParams()
  console.log(zoneId,"zoneId")
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,7 +46,7 @@ export default function VillageModel({action,dispatch,taluka,getDistrict,setActi
             
             var id = `village${components.join("")}`
           
-        var data = {blockUniqueId:blockUniqueId,villageUniqueId:singleDistrict.villageUniqueId,villageName:block}
+        var data = {districtName:districtName,blockName:blockData.blockName,blockUniqueId:blockUniqueId,villageUniqueId:singleDistrict.villageUniqueId,talukaUniqueId:taluka.talukaUniqueId,talukaName:taluka.talukaName,villageName:block,villageUniqueId:singleDistrict.villageUniqueId}
         const response =  action.type=="edit"?await dispatch(editZone({data:data,id:zoneId})):await dispatch(addVillage({zoneId:zoneId,data:{villageName:block,villageUniqueId:id,talukaUniqueId:taluka.talukaUniqueId,blockUniqueId:blockUniqueId}}))
         console.log(response)
         setOpenAlert({
@@ -84,7 +84,7 @@ export default function VillageModel({action,dispatch,taluka,getDistrict,setActi
         var id = `taluka${components.join("")}`
       
     var data = {blockUniqueId:blockUniqueId,villageUniqueId:singleDistrict.villageUniqueId,villageName:block}
-    const response =  action.type=="edit"?await dispatch(editZone({data:data,id:zoneId})):await dispatch(addTaluka({zoneId:zoneId,data:{talukaName:block,talukaUniqueId:id,blockUniqueId:blockUniqueId}}))
+    const response =  action.type=="edit"?await dispatch(editZone({data:data,id:zoneId,blockUniqueId:blockUniqueId,villageUniqueId:singleDistrict._id})):await dispatch(addTaluka({zoneId:zoneId,data:{talukaName:block,talukaUniqueId:id,blockUniqueId:blockUniqueId}}))
     console.log(response)
     setOpenAlert({
         open:true,
@@ -109,7 +109,7 @@ export default function VillageModel({action,dispatch,taluka,getDistrict,setActi
     <div>
       <Dialog open={action.open} onClose={()=>closeDialog()}>
         <DialogTitle>      
-             {action.for != "taluka"?action.type == "add"? "Add Block":"Edit Block":"Add Taluka"}
+             {action.for != "taluka"?action.type == "add"? "Add Village":"Edit Village":"Add Taluka"}
              
         </DialogTitle>
         <DialogContent>
@@ -117,7 +117,7 @@ export default function VillageModel({action,dispatch,taluka,getDistrict,setActi
           <TextField
             autoFocus
             margin="dense"
-            label="Block Name"
+            label={action.for != "taluka"?"Village Name":"Taluka Name"}
             type="text"
             value={block}
             onChange={(e)=>setBlock(e.target.value)}
