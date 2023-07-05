@@ -8,7 +8,7 @@ import { getAllVilleges } from '../../Services/Apis/Api';
 
   
 
-const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setCheckedDepartments,checkedSelectedDepartments,setCheckedSelectedDepartments,singleDistrict,allDepartmantData}) => {
+const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setCheckedDepartments,checkedSelectedDepartments,setCheckedSelectedDepartments,singleDistrict,allDepartmantData,nmberOfAssignDept}) => {
 
     const [searchTerm, setSearchTerm] = React.useState("");
     const [searchSelectedTerm, setSelectedSearchTerm] = React.useState("");
@@ -20,15 +20,18 @@ const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setChecke
       setSearchTerm(event.target.value);
     };
 
-    React.useEffect(() => {
-        console.log(checkedDepartments,"checkedDepartments")
-        console.log(checkedSelectedDepartments,"checkedDepartments")
+    // React.useEffect(() => {
+    //     console.log(checkedDepartments,"checkedDepartments")
+    //     console.log(checkedSelectedDepartments,"checkedDepartments")
 
     
-    }, [checkedDepartments,checkedSelectedDepartments])
+    // }, [checkedDepartments,checkedSelectedDepartments])
   
     const handleCheckboxChange = (event) => {
+      console.log(event.target.value,"nmberOfAssignDept1")
+
       const departmentId = event.target.value;
+      console.log("checkedSelectedDepartments",checkedSelectedDepartments)
       if (event.target.checked) {
         setCheckedSelectedDepartments([...checkedSelectedDepartments, departmentId]);
       } else {
@@ -40,6 +43,8 @@ const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setChecke
     };
     const handleCheckboxChangeAgain = (event) => {
       const departmentId = event.target.value;
+      console.log(event.target.value,"nmberOfAssignDept1")
+
       if (event.target.checked) {
         setCheckedDepartments([...checkedDepartments, departmentId]);
       } else {
@@ -52,8 +57,9 @@ const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setChecke
     const filteredDepartments = departmant.filter((department) =>
       department.deptName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    console.log(nmberOfAssignDept,"nmberOfAssignDept")
 
-    const allfilteredDepartments = allDepartmantData.filter((department) =>
+    const allfilteredDepartments = nmberOfAssignDept.filter((department) =>
     department.deptName.toLowerCase().includes(searchSelectedTerm.toLowerCase())
   );
    const Departmant = ({departmant,type})=>{
@@ -66,8 +72,8 @@ const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setChecke
           <ListItemIcon>
                 <input
               type="checkbox"
-              value={departmant._id}
-              checked={type=="select"?checkedDepartments.includes(departmant._id):checkedSelectedDepartments.includes(departmant._id)}
+              value={type=="select"?departmant._id:departmant.deptId}
+              checked={type=="select"?checkedDepartments.includes(departmant._id):checkedSelectedDepartments.includes(departmant.deptId)}
               onChange={type=="select"?handleCheckboxChangeAgain:handleCheckboxChange}
             />
              <div style={{marginLeft:"10px"}}>   {departmant.deptName}</div>
@@ -101,13 +107,13 @@ const SelectMultiSelectionDepartment = ({departmant,checkedDepartments,setChecke
               
             {console.log(singleDistrict,"singleDistrict")}
             {allfilteredDepartments.map((dept)=>{
-                return(singleDistrict.AssignDepartments.departments.map((deptCheck)=>{
-                  console.log(dept._id , deptCheck)
+                // return(singleDistrict.AssignDepartments.departments.map((deptCheck)=>{
+                //   console.log(dept._id , deptCheck)
                   return(
-                    <div>{deptCheck == dept._id?<Departmant departmant={dept} type="selected"/>:""}</div>
+                    <div>{<Departmant departmant={dept} type="selected"/>}</div>
                   )
-                }))
-            })}
+                })
+              }
             </Box>
             </Box>
    

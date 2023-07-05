@@ -27,6 +27,8 @@ export default function Block() {
   const {zoneId} = useParams()
   const dispatch = useDispatch()
   const [District,setDistrict] = React.useState([])
+  const [vill,setVill] = React.useState({})
+
   const [openDilog,setOpenDialog] = React.useState({
     open:false,
     type:"add"
@@ -44,6 +46,7 @@ export default function Block() {
     dispatch(zoneById(zoneId)).then((res)=>{
         console.log(res.payload.result)
       setDistrict(res.payload.result.blocks)
+      setVill(res.payload.result)
     })
   }
   React.useEffect(() => {
@@ -68,7 +71,7 @@ const editDepartmant = (singleDepartmant)=>{
       <div style={{display:"flex"}}>
            <div style={{color:"darkblue",cursor:"pointer",marginLeft:"5px"}} onClick={()=>editDepartmant(row.row)}><EditIcon/></div>
          {/*<div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>*/}
-          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/villege/${zoneId}/${row.row.blockUniqueId}`)}><VisibilityIcon/></div>
+          <div style={{color:"darkgreen",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/villege/${zoneId}/${vill.districtName}/${row.row.blockUniqueId}`)}><VisibilityIcon/></div>
           
       </div>
     )
@@ -79,15 +82,6 @@ const editDepartmant = (singleDepartmant)=>{
       field: "blockName",
       headerName: "Block Name",
       width: 150,
-      editable: false,
-    },
-    {
-      field: "IsActive",
-      headerName: "Active",
-      width: 150,
-      renderCell:(row)=>{
-  return(<Switch value={row.IsActive}/>)
-      },
       editable: false,
     },
     {
@@ -132,8 +126,7 @@ const editDepartmant = (singleDepartmant)=>{
               getRowId={(row) =>  row.blockUniqueId}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
+            
             />
           </div>
       </div>

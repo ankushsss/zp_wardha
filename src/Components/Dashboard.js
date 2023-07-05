@@ -11,8 +11,8 @@ export default function Dashboard() {
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const navigate = useNavigate()
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
-  
-
+  var userData = JSON.parse(localStorage.getItem("User"))
+  console.log(userData)
   return (
     <article className="w-full h-screen overflow-hidden ">
       <div>
@@ -63,30 +63,7 @@ export default function Dashboard() {
                   </svg>
                 </button>
 
-                {/* search input */}
-                <div className="relative mx-4 lg:mx-0">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <svg
-                      className="h-5 w-5 text-gray-500"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      ></path>
-                    </svg>
-                  </span>
-
-                  <input
-                    className="form-input w-32 sm:w-64 rounded-md pl-10 pr-4 focus:border-indigo-600"
-                    type="text"
-                    placeholder="Search"
-                  />
-                </div>
+                
               </div>
 
               <div className="flex items-center">
@@ -121,16 +98,15 @@ export default function Dashboard() {
                     <a
                       href="/"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
-                    >
-                      Profile
+                      style={{fontSize:"12px"}}
+                      >
+                      {userData.fullname}<br/>
+                      {userData.role}
+
                     </a>
+                   
                     <a
-                      href="/"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
-                    >
-                      Products
-                    </a>
-                    <a
+                    style={{width:"100%"}}
                       onClick={()=>{
                         removeCookie(["token"])
                         navigate("/")

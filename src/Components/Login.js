@@ -34,6 +34,8 @@ const [cookies, setCookie] = useCookies(['token']);
       {
         setToken(res.data)
         setCookie("token",res.payload.token)
+        console.log(res.payload.data,"res.payload")
+        localStorage.setItem("User", JSON.stringify(res.payload.data));
         naviagte("/dashboard")
         window.location.reload()
       }

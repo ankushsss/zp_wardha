@@ -126,8 +126,7 @@ const editDepartmant = (singleDepartmant)=>{
               getRowId={(row) =>  row._id}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
+            
   />
           </div>
       </div>

@@ -9,7 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { talukaList,deleteDepartmant } from "../../Services/Apis/Api";
+import { talukaList,deleteVillage } from "../../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 // import Model from "./Departmant/Model";
@@ -24,10 +24,14 @@ export default function Village() {
   const Handle = () => {
     "Hello";
   };
-  const {zoneId,blockUniqueId} = useParams()
+  // const {zoneId,blockUniqueId} = useParams()
+  const {zoneId,districtName,blockUniqueId,} = useParams()
+
   const dispatch = useDispatch()
   const [village,setVillages] = React.useState([])
   const [taluka,setTalukas] = React.useState({})
+  const [blockData,setBlockData] = React.useState({})
+
 
   
   const [openDilog,setOpenDialog] = React.useState({
@@ -48,9 +52,10 @@ export default function Village() {
 
 
     dispatch(talukaList({zoneId,blockUniqueId})).then((res)=>{
-        console.log(res.payload.data)
+        console.log(res.payload.data,"jkl")
         setTalukas(res.payload.data[0].blocks[0].taluka)
         setVillages(res.payload.data[0].blocks[0].taluka.villages)
+        setBlockData(res.payload.data[0].blocks[0])
     })
   }
   React.useEffect(() => {
@@ -62,7 +67,9 @@ const editDepartmant = (singleDepartmant)=>{
   setSingleDistrict(singleDepartmant)
 }
  function deleteSingleDepartmant (singleDepartmant){
-  const response =  dispatch(deleteDepartmant(singleDepartmant._id)).then((res)=>{
+  console.log(singleDepartmant,"singleDepartmant")
+  let data = {blockUniqueId:blockUniqueId,blockName:blockData.blockName,villageUniqueId:singleDepartmant.villageUniqueId,talukaUniqueId:taluka.talukaUniqueId}
+  const response =  dispatch(deleteVillage({id:zoneId,data:data})).then((res)=>{
     console.log(res)
     setOpenAlert({open:true,mssg:"departmant delesetSingleDistrictte successfully",type:"success"})
     getDistrict()
@@ -75,7 +82,8 @@ const editDepartmant = (singleDepartmant)=>{
       <div style={{display:"flex"}}>
            <div  style={{color:"darkblue",cursor:"pointer",marginLeft:"5px"}} onClick={()=>editDepartmant(row.row)}><EditIcon/></div>
           <div style={{color:"darkred",cursor:"pointer",marginLeft:"5px"}} onClick={()=>deleteSingleDepartmant(row.row)}><DeleteIcon/></div>
-         {/* <div style={{color:"green",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/department/${row.row._id}/${row.row.deptName}`)}><VisibilityIcon/></div>*/}
+         
+          {/* <div style={{color:"green",cursor:"pointer",marginLeft:"5px"}} onClick={()=>navigate(`/dashboard/department/${row.row._id}/${row.row.deptName}`)}><VisibilityIcon/></div>*/}
           
       </div>
     )
@@ -117,6 +125,7 @@ const editDepartmant = (singleDepartmant)=>{
     </Toolbar>
   </AppBar>
     <div style={{display:"flex", height:"500px",marginTop:"20px",background:"white",justifyContent:"center",width:"100%",flexDirection:"column",alignItems:"center"}}>
+    {taluka.talukaName?<div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><div  variant="contained"  >{taluka.talukaName}</div></div><div><span style={{cursor:"pointer"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add",for:"taluka"})}><EditIcon/></span><span style={{cursor:"pointer"}}><DeleteIcon/></span></div></div>:""}
       
     {taluka.talukaName?<div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add",for:"village"})}>Add Village</Button></div></div>:<div className="flex " style={{justifyContent:"left",width:"80%",marginBottom:"20px"}}><div style={{width:"90%"}}><Button  variant="contained" style={{background: "#6750A4"}} onClick={()=>setOpenDialog({...openDilog,open:true,type:"add",for:"taluka"})}>Add Taluka</Button></div></div>}
     <div style={{minWidth:"300px",maxWidth:"100%",width:"80%",background:"white"}}>
@@ -129,14 +138,13 @@ const editDepartmant = (singleDepartmant)=>{
               getRowId={(row) =>  row.villageUniqueId}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
+            
   />:""}
           </div>
       </div>
     </div>
         {/*<Model action={openDilog} getDistrict={getDistrict} setOpenAlert={setOpenAlert} singleDistrict={singleDistrict} dispatch={dispatch} setAction={setOpenDialog}/>*/}
-        <VillageModel  action={openDilog} getDistrict={getDistrict} taluka={taluka} setOpenAlert={setOpenAlert} singleDistrict={singleDistrict} dispatch={dispatch} setAction={setOpenDialog}/>
+        <VillageModel  blockData={blockData} action={openDilog} getDistrict={getDistrict} taluka={taluka} setOpenAlert={setOpenAlert} singleDistrict={singleDistrict} dispatch={dispatch} setAction={setOpenDialog}/>
         <AlertMssg  action={openAlert} setAction={setOpenAlert}/>
     </div>
   );

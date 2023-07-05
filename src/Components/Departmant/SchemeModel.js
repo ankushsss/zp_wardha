@@ -28,7 +28,7 @@ export default function SchemeModel({action,dispatch,getDepartmentList,setAction
   }
 
    React.useEffect(() => {
-    action.type=="sedit"?setScheme(singleDepartmantInformation.deptName):setScheme("")
+    action.type=="edit"?setScheme(singleDepartmantInformation.schemeName):setScheme("")
    }, [singleDepartmantInformation,action])
    async function addScheme(){
         try{

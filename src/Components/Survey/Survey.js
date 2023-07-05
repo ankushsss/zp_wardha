@@ -9,7 +9,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useDispatch } from "react-redux";
-import { zoneList,deleteDepartmant,departmantList,surveyList,deleteSurvey} from "../../Services/Apis/Api";
+import { zoneList,deleteDepartmant,checkMatrix,departmantList,surveyList,deleteSurvey} from "../../Services/Apis/Api";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 // import Model from "./Departmant/Model";
@@ -41,6 +41,7 @@ export default function Survey() {
   const [departmants, setDepartmants] = React.useState([])
   const navigate = useNavigate()
   const [surveys, setSurveys] = React.useState([])
+  const [isTrue, setIsTrue] = React.useState(true)
  
 
   const getDistrict = ()=>{
@@ -61,7 +62,7 @@ export default function Survey() {
   }, [])
 const editDepartmant = (singleDepartmant)=>{
   setOpenDialog({...openDilog,open:true,type:"edit",for:"open"})
-  (singleDepartmant)
+  setSingleDistrict(singleDepartmant)
 }
  function deleteSingleDepartmant (singleDepartmant){
   const response =  dispatch(deleteSurvey(singleDepartmant._id)).then((res)=>{
@@ -89,6 +90,16 @@ function starSurvay(row)
           
       </div>
     )
+  }
+
+  const verify = (row)=>{
+     dispatch(checkMatrix()).then((res)=>{
+      console.log(res.payload.message)
+      if(res.payload.message == "true")
+      {
+        setIsTrue(false)
+      }
+     })
   }
   const columns = [
     { field: "surveyName", headerName: "Survey Name", width: 250 },
@@ -134,9 +145,9 @@ function starSurvay(row)
     {
       field: "IsActive",
       headerName: "Active",
-      width: 150,
+      width: 250,
       renderCell:(row)=>{
-  return(<Button type="outline" onClick={()=>starSurvay(row)}>{row.row.IsOnGoingSurvey!="OnGoing"?"Start":"Stop"}</Button>)
+  return(<div><Button type="outline" disabled={isTrue} onClick={()=>starSurvay(row)}>{row.row.IsOnGoingSurvey!="OnGoing"?"Start":"Stop"}</Button><Button type="outline" onClick={()=>verify(row)}>isAllVillagesAssign</Button></div>)
       },
       editable: false,
     },
@@ -182,8 +193,6 @@ function starSurvay(row)
               getRowId={(row) =>  row._id}
               onRowClick={Handle}
               rowsPerPageOptions={[5]}
-              checkboxSelection
-              disableSelectionOnClick
   />
           </div>
       </div>

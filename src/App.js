@@ -23,7 +23,10 @@ import { useCookies } from "react-cookie";
 import Taluka from "./Components/Zone/Taluka";
 import Question from "./Components/Departmant/Question";
 import ForgotPassword from "./Components/ForgotPassword";
-
+import Notification from "./Components/Notification/Notification";
+import User2 from "./Components/User2/User";
+import CollapsibleTable from "./Components/Survey List";
+import UserProfile from "./Components/User2/UserProfile";
 function App() {
   // const {login} = useSelector(state=>state)
   const [login, setLogin] = useState(false)
@@ -48,20 +51,27 @@ function App() {
         <Route path="/dashboard/table" element={<Table />} />
         <Route path="/dashboard/department/:departmentId/:departmentName" element={<SingleDepartmentSchema/>} />
         <Route path="/dashboard/district/" element={<District/>} />
-        <Route path="/dashboard/user/" element={<User/>} />
+        <Route path="/dashboard/user/" element={<User2/>} />
+        <Route path="/dashboard/userProfile/" element={<UserProfile/>} />
+
+        
+
         <Route path="/dashboard/question/:departmentId/:schemeId" element={<Question/>} />
 
 
         <Route path="/dashboard/district/:zoneId" element={<Block/>} />
 
         <Route path="/dashboard/taluka/:zoneId/:blockUniqueId" element={<Taluka/>} />
-        <Route path="/dashboard/villege/:zoneId/:blockUniqueId" element={<Village/>} />
+        <Route path="/dashboard/villege/:zoneId/:districtName/:blockUniqueId" element={<Village/>} />
 
 
+        <Route path="/dashboard/notification" element={<Notification/>}/>
 
         <Route path="/dashboard/Form" element={<Detail />} />
         <Route path="/dashboard/Survey" element={<Survey/>} />
         <Route path="/dashboard" element={<Chart/>} />
+        <Route path="/dashboard/surveyList" element={<CollapsibleTable/>}/>
+        
 
         <Route path="/dashboard/Ui" element={<Ui />} />
       </Route>
